@@ -96,12 +96,18 @@ class NHLApi:
 @dataclass
 class StorageKey:
     # TODO what propertie are needed to partition?
+    # partition by date
+    def __init__(self, gamedate, gameid):
+        self._gamedate = gamedate.strftime('%Y%m%d')
+        self._gameid = gameid
+
     gameid: str
 
     def key(self):
         ''' renders the s3 key for the given set of properties '''
         # TODO use the properties to return the s3 key
-        return f'{self.gameid}.csv'
+        # add date to the file name
+        return f'{self._gamedate}_{self._gameid}.csv'
 
 class Storage():
     def __init__(self, dest_bucket, s3_client):
@@ -120,14 +126,14 @@ class Crawler():
     def crawl(self, startDate: datetime, endDate: datetime) -> None:
 	# NOTE the data direct from the API is not quite what we want. Its nested in a way we don't want
 	#      so here we are looking for your ability to gently massage a data set. 
-        #TODO error handling
-        #TODO get games for dates
-        #TODO for each game get all player stats: schedule -> date -> teams.[home|away] -> $playerId: player_object (see boxscore above)
-        #TODO ignore goalies (players with "goalieStats")
+
         #TODO output to S3 should be a csv that matches the schema of utils/create_games_stats 
                  
 def main():
-    import os
+    import os#TODO error handling
+    #TODO get games for dates
+    #TODO for each game get all player stats: schedule -> date -> teams.[home|away] -> $playerId: player_object (see boxscore above)
+    #TODO ignore goalies (players with "goalieStats")
     import argparse
     parser = argparse.ArgumentParser(description='NHL Stats crawler')
     # TODO what arguments are needed to make this thing run,  if any?
