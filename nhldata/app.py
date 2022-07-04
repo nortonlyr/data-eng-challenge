@@ -106,7 +106,7 @@ class StorageKey:
     def key(self):
         ''' renders the s3 key for the given set of properties '''
         # TODO use the properties to return the s3 key
-        # add date to the file name
+        # add date to the file name, set partition
         return f'{self._gamedate}_{self._gameid}.csv'
 
 class Storage():
@@ -128,9 +128,13 @@ class Crawler():
 	#      so here we are looking for your ability to gently massage a data set. 
 
         #TODO output to S3 should be a csv that matches the schema of utils/create_games_stats 
-                 
+        schedule = self.api.schedule(startDate, endDate)
+
 def main():
     import os#TODO error handling
+    import argparse
+
+    parser = argparse.ArgumentParser(description='NHL data crawler')
     #TODO get games for dates
     #TODO for each game get all player stats: schedule -> date -> teams.[home|away] -> $playerId: player_object (see boxscore above)
     #TODO ignore goalies (players with "goalieStats")
